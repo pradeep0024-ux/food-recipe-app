@@ -27,10 +27,25 @@ function RecipeForm() {
   const submitRecipe = () => {
     if (recipeName && cookTime && cookingInstruction && ingredientInputs.length) {
       const newRecipe = { recipeName, cookTime, cookingInstruction, ingredients: ingredientInputs };
-      localStorage.setItem("recipeData", JSON.stringify(newRecipe));
+  
+      // Ensure existingRecipes is always an array
+      let existingRecipes = JSON.parse(localStorage.getItem("recipeData")) ?? [];
+      if (!Array.isArray(existingRecipes)) {
+        localStorage.removeItem("recipeData");
+        existingRecipes = [];
+      }
+  
+      // Add the new recipe to the array
+      const updatedRecipes = [...existingRecipes, newRecipe];
+  
+      // Save the updated array back to localStorage
+      localStorage.setItem("recipeData", JSON.stringify(updatedRecipes));
+  
+      // Navigate to summary page
       navigate("/summary");
     }
   };
+  
 
   return (
     <div className="container">

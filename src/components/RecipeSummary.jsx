@@ -4,26 +4,30 @@ import "./RecipeForm.css"; // Import external CSS
 
 function RecipeSummary() {
   const navigate = useNavigate();
-  const recipeData = JSON.parse(localStorage.getItem("recipeData"));
+  const recipes = JSON.parse(localStorage.getItem("recipeData")) || [];
 
-  if (!recipeData) return <p className="container">No recipe found. Please add a recipe first.</p>;
-
+  if (recipes.length === 0) {
+    return <p className="container">No recipes found. Please add a recipe first.</p>;
+  }
+  
   return (
     <div className="container">
       <h1>Recipe Summary</h1>
 
-      <div className="recipe-card">
-        <h2>{recipeData.recipeName}</h2>
-        <p><strong>Cook Time:</strong> {recipeData.cookTime} minutes</p>
-        <p><strong>Instructions:</strong> {recipeData.cookingInstruction}</p>
+      {recipes.map((recipe, index) => (
+        <div key={index} className="recipe-card">
+          <h2>{recipe.recipeName}</h2>
+          <p><strong>Cook Time:</strong> {recipe.cookTime} minutes</p>
+          <p><strong>Instructions:</strong> {recipe.cookingInstruction}</p>
 
-        <h3>Ingredients:</h3>
-        <ul>
-          {recipeData.ingredients.map((ing, index) => (
-            <li key={index}>{ing.amount} {ing.unit} {ing.ingredient}</li>
-          ))}
-        </ul>
-      </div>
+          <h3>Ingredients:</h3>
+          <ul>
+            {recipe.ingredients.map((ing, i) => (
+              <li key={i}>{ing.amount} {ing.unit} {ing.ingredient}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
 
       <button onClick={() => navigate("/")} className="add-btn">Add Another Recipe</button>
     </div>
